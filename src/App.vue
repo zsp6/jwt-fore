@@ -1,28 +1,40 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <input type="text" placeholder="用户名" v-model="userName"/>
+    <input type="text" placeholder="密码" v-model="passWord" />
+    <button @click="handleLogin">登录</button>
+    <button @click="handleMoney">获取余额</button>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import http from './utils/http.js';
 export default {
-  name: 'app',
-  components: {
-    HelloWorld
+  data () {
+    return {
+      userName: '',
+      passWord: ''
+    }
+  },
+  methods: {
+    handleLogin () {
+      http.get('/login', {
+        params: {
+          userName: this.userName,
+          passWord: this.passWord
+        }
+      }).then((res) => {
+        // console.log(res);
+        // 前端需要主动保存拿到的token
+        // res.token
+        localStorage.setItem('token', res.data.token);
+      })
+    },
+    handleMoney () {
+      http.get('/yue').then(res => {
+        // console.log(res)
+      })
+    }
   }
 }
 </script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
